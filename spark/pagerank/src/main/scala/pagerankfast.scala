@@ -33,7 +33,7 @@ object wikiPageRank {
 			line => (line(0).toLong, line(1))
 		}
 
-		val graph = Graph.fromEdgeTuples(edges,1)
+		val graph = Graph.fromEdgeTuples(links,1)
 
 		//Run PageRank
 		val ranks = graph.staticPageRank(30)

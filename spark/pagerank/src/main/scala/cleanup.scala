@@ -32,9 +32,9 @@ object cleanWikiData {
 		val links = linksFile.map {
 			line => line.split(" ")
 		}.filter {
-			case linkTuple => (linkTuple.length == 4)
+			case line => (line.length == 4)
 		}.map {
-			case (id,ns1,title,ns2) => (toLong(id),toInt(ns1),title,toInt(ns2))
+			case line => (toLong(line(0)),toInt(line(1)),line(2),toInt(line(3)))
 		}.filter {
 			case (id,ns1,_,ns2) => ((id != -1) && (ns1 != -1) && (ns2 != -1))
 		}.filter {
@@ -46,9 +46,9 @@ object cleanWikiData {
 		val pages = pagesFile.map {
 			line => line.split(" ")
 		}.filter {
-			case pageTuple => (pageTuple.length == 3)
-		}.map { line =>
-			case (id,ns,title) => (toLong(id),toInt(ns),title)
+			case line => (line.length == 3)
+		}.map {
+			case line => (toLong(line(0)),toInt(line(1)),line(2))
 		}.filter {
 			case (id,ns,title) => ((id != -1) && (ns != -1))
 		}.filter {
