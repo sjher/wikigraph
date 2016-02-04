@@ -39,10 +39,16 @@ object wikiPageRank {
 		val ranks = graph.staticPageRank(30)
 
 		val ranksByVertex = pages.join(ranks.vertices)
-
 		val ranksForPrint = ranksByVertex.map {
 			case (id, (title, rank)) => Array(id, title, rank).mkString(",")
 		}
 		ranksForPrint.saveAsTextFile("/wikipedia/en/wikiPageRanks")
+
+		val weightsForPrint = ranks.edges.map {
+			edge => (edge.srcId.toLong,edge.dstId.toLong,edge.attr.toString)
+		}.map {
+			case (fromId, toId, weight) => Array(fromId,toId,weight).mkString(",")
+		}
+		weightsForPrint.saveAsTextFile("/wikipedia/en/wikiEdgeWeights")
 	}
 }
