@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Get shortest path between Wikipedia articles</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <img src="images/ui-anim_basic_16x16.gif" id="loadingif" style="display:none">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+    .ui-autocomplete-loading {
+      background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+    }
+  </style>
+  <script>
+  $(function() {
+    var cache = {};
+    $("#source_article").autocomplete({
+      minLength: 4,
+      source: function(request, response) {
+        var term = request.term;
+        if ( term in cache ) {
+          response( cache[term]);
+          return;
+        }
+ 
+        $.getJSON("/find/"+term, request, function(data, status, xhr) {
+          cache[term] = data;
+          response(data);
+        });
+      }
+    });
+    $("#destination_article").autocomplete({
+      minLength: 4,
+      source: function(request, response) {
+        var term = request.term;
+        if (term in cache) {
+          response(cache[term]);
+          return;
+        }
+ 
+        $.getJSON("/find/"+term, request, function(data,status, xhr) {
+          cache[term] = data;
+          response(data);
+        });
+      }
+    });
+
+    $("#getpath").on("click",function(){
+        $('#loadingif').show();
+    	window.location="/path/"+$("#source_article").val() + "/" + $("#destination_article").val()
+	});
+  });
+  </script>
+  </head>
+  <body>
+  <div class="ui-widget">
+    <label for="source_article">Source article:    </label>
+    <input id="source_article", size="40">
+  </div>
+  <div class="ui-widget">
+    <label for="destination_article">Destination article: </label>
+    <input id="destination_article", size="40">
+    <button id="getpath" >Get Path</button>
+  </div>
+  </body>
+</html>
