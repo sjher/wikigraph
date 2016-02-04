@@ -3,3 +3,5 @@ website/node_modules/
 website/lib/config.js
 spark/pagerank/project
 spark/pagerank/target
+preprocessing/node_modules/
+preprocessing/simpleWiki/
