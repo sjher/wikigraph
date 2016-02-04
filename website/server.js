@@ -43,4 +43,4 @@ app.get("/images/:fileName", function(req,res){
     res.end(image, 'binary');
 });
 
-app.listen(3000);
+app.listen(80);
