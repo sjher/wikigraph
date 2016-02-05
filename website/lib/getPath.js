@@ -1,7 +1,5 @@
 var cypherQuery = require("./cypherQuery.js");
 var _ = require("lodash");
-var fs = require("fs");
-var path = require('path');
 
 function getPath(from, to, callback) {
 
@@ -25,16 +23,14 @@ function getPath(from, to, callback) {
             return _.has(node,"pageId");
         });
 
-        var fileString = "source,target,value\n";
+        var fileString = "source,target,value,rank1,rank2\n";
 
         nodes.forEach(function(node, index) {
             if (index > 0) {
-                fileString += nodes[index-1].title +","+node.title + ",1\n"
+                fileString += nodes[index-1].title +","+node.title + ",1,"+nodes[index-1].rank+","+node.rank+"\n"
             }
         });
-
-        fs.writeFileSync(path.join(__dirname,'../force.csv'),fileString);
-        callback(null, JSON.stringify(nodes, null, 3));
+        callback(null, fileString);
     });
 }
 

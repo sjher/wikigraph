@@ -49,7 +49,7 @@
 
     $("#getpath").on("click",function(){
         $('#loadingif').show();
-    	window.location="/path/"+$("#source_article").val() + "/" + $("#destination_article").val()
+    	window.location="/draw?from="+$("#source_article").val() + "&to=" + $("#destination_article").val()
 	});
   });
   </script>

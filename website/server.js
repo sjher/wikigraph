@@ -19,22 +19,17 @@ app.get('/find/:firstFourOrMore',function(req,res) {
     });
 });
 
-app.get('/graph', function(req,res) {
-    fs.readFile(path.join(__dirname,'/force.csv'), function(error) {
-        if (error) {
-            return res.status(500).send("Server Error");
-        }
-        res.sendFile(path.join(__dirname,'/force.csv'));
-    });
-});
-
-app.get('/path/:sourceVertex/:destinationVertex', function(req, res) {
+app.get('/pathInfo/:sourceVertex/:destinationVertex', function(req, res) {
     getPath(req.params["sourceVertex"], req.params["destinationVertex"], function(error, data) {
         if (error) {
             return res.status(500).send(error);
         }
-        res.sendFile(path.join(__dirname,'/drawGraph.html'));
+        res.send(data);
     });
+});
+
+app.get('/draw', function(req, res) {
+    res.sendFile(path.join(__dirname,'/drawGraph.html'));
 });
 
 app.get("/images/:fileName", function(req,res){
@@ -43,4 +38,4 @@ app.get("/images/:fileName", function(req,res){
     res.end(image, 'binary');
 });
 
-app.listen(80);
+app.listen(3000);
