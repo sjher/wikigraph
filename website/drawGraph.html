@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <script src="http://d3js.org/d3.v3.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
 <style>
 
     path.link {
@@ -23,7 +24,30 @@
 
 </style>
 <body>
+<section id='chart'></section>
 <script>
+    var opts = {
+        lines: 13 // The number of lines to draw
+        , length: 40 // The length of each line
+        , width: 14 // The line thickness
+        , radius: 42 // The radius of the inner circle
+        , scale: 2.45 // Scales overall size of the spinner
+        , corners: 0.5 // Corner roundness (0..1)
+        , color: '#000' // #rgb or #rrggbb or array of colors
+        , opacity: 0.2 // Opacity of the lines
+        , rotate: 0 // The rotation offset
+        , direction: -1 // 1: clockwise, -1: counterclockwise
+        , speed: 1 // Rounds per second
+        , trail: 60 // Afterglow percentage
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+        , className: 'spinner' // The CSS class to assign to the spinner
+        , top: '50%' // Top position relative to parent
+        , left: '50%' // Left position relative to parent
+        , shadow: false // Whether to render a shadow
+        , hwaccel: false // Whether to use hardware acceleration
+        , position: 'absolute' // Element positioning
+    };
 
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -43,8 +67,14 @@ var getUrlParameter = function getUrlParameter(sParam) {
 var from = getUrlParameter('from');
 var to = getUrlParameter('to');
 
+var spinner = new Spinner(opts).spin(document.getElementById("chart"));
+
+    setTimeout(function() {
+
+
 d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
 
+    spinner.stop();
     var nodes = {};
 
     // Compute the distinct nodes from the links.
@@ -67,7 +97,7 @@ d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
             .on("tick", tick)
             .start();
 
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("#chart").append("svg")
             .attr("width", width)
             .attr("height", height);
 
@@ -132,7 +162,9 @@ d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
         });
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
+
 });
+    }, 1500);
 </script>
 </body>
 </html>
