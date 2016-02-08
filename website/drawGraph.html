@@ -49,136 +49,135 @@
         , position: 'absolute' // Element positioning
     };
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
 
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
 
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
         }
-    }
-};
+    };
 
-var from = getUrlParameter('from');
-var to = getUrlParameter('to');
+    var from = getUrlParameter('from');
+    var to = getUrlParameter('to');
 
-var spinner = new Spinner(opts).spin(document.getElementById("chart"));
+    var spinner = new Spinner(opts).spin(document.getElementById("chart"));
 
     setTimeout(function() {
 
 
-d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
+        d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
 
-    spinner.stop();
+            spinner.stop();
 
-    if (error) {
-        return alert("Error. Could not find path. Try another.");
-    }
+            if (error) {
+                return alert("Error. Could not find path. Try another.");
+            }
 
-    var nodes = {};
+            var nodes = {};
 
-    // Compute the distinct nodes from the links.
-    links.forEach(function(link) {
-        link.source = nodes[link.source] ||
-                (nodes[link.source] = {name: link.source, rank: link.rank1});
-        link.target = nodes[link.target] ||
-                (nodes[link.target] = {name: link.target, rank: link.rank2});
-        link.value = +link.value;
-    });
+            // Compute the distinct nodes from the links.
+            links.forEach(function(link) {
+                link.source = nodes[link.source] ||
+                        (nodes[link.source] = {name: link.source, rank: link.rank1});
+                link.target = nodes[link.target] ||
+                        (nodes[link.target] = {name: link.target, rank: link.rank2});
+                link.value = +link.value;
+            });
 
-    var width = 1000, height = 600;
+            var width = 1000, height = 600;
 
-    var force = d3.layout.force()
-            .nodes(d3.values(nodes))
-            .links(links)
-            .size([width, height])
-            .linkDistance(115) //distance between nodes in graph
-            .charge(-300)
-            .on("tick", tick)
-            .start();
+            var force = d3.layout.force()
+                    .nodes(d3.values(nodes))
+                    .links(links)
+                    .size([width, height])
+                    .linkDistance(115) //distance between nodes in graph
+                    .charge(-300)
+                    .on("tick", tick)
+                    .start();
 
-    var svg = d3.select("#chart").append("svg")
-            .attr("width", width)
-            .attr("height", height);
+            var svg = d3.select("#chart").append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
 
-    // build the arrow.
-    svg.append("svg:defs").selectAll("marker")
-            .data(["end"])      // Different link/path types can be defined here
-            .enter().append("svg:marker")    // This section adds in the arrows
-            .attr("id", String)
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 20) //distance of arrow from circle
-            .attr("refY", -1.5)
-            .attr("markerWidth", 13) //Size of arrow
-            .attr("markerHeight", 13) //size of arrow
-            .attr("orient", "auto")
-            .append("svg:path")
-            .attr("d", "M0,-5L10,0L0,5");
+            // build the arrow.
+            svg.append("svg:defs").selectAll("marker")
+                    .data(["end"])      // Different link/path types can be defined here
+                    .enter().append("svg:marker")    // This section adds in the arrows
+                    .attr("id", String)
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 20) //distance of arrow from circle
+                    .attr("refY", -1.5)
+                    .attr("markerWidth", 13) //Size of arrow
+                    .attr("markerHeight", 13) //size of arrow
+                    .attr("orient", "auto")
+                    .append("svg:path")
+                    .attr("d", "M0,-5L10,0L0,5");
 
-    // add the links and the arrows
-    var path = svg.append("svg:g").selectAll("path")
-            .data(force.links())
-            .enter().append("svg:path")
-            //.attr("class", function(d) { return "link " + d.type; })
-            .attr("class", "link")
-            .attr("marker-end", "url(#end)");
+            // add the links and the arrows
+            var path = svg.append("svg:g").selectAll("path")
+                    .data(force.links())
+                    .enter().append("svg:path")
+                    //.attr("class", function(d) { return "link " + d.type; })
+                    .attr("class", "link")
+                    .attr("marker-end", "url(#end)");
 
-    // define the nodes
-    var node = svg.selectAll(".node")
-            .data(force.nodes())
-            .enter().append("g")
-            .attr("class", "node")
-            .call(force.drag);
+            // define the nodes
+            var node = svg.selectAll(".node")
+                    .data(force.nodes())
+                    .enter().append("g")
+                    .attr("class", "node")
+                    .call(force.drag);
 
-    // add the nodes
-    node.append("circle")
-            .attr("r", 25); //side of nodes
+            // add the nodes
+            node.append("circle")
+                    .attr("r", 25); //side of nodes
 
-    // add the page title
-    node.append("text")
-            .attr("x", 26) //Distance from circle center
-            .attr("dy", ".35em")
-            .text(function(d) { return d.name; });
+            // add the page title
+            node.append("text")
+                    .attr("x", 26) //Distance from circle center
+                    .attr("dy", ".35em")
+                    .text(function(d) { return d.name; });
 
-    // add the page title
-    node.append("text")
-            .attr("dy", ".35em")
-            .text(function(d) { return Math.round(d.rank); })
-            .style("text-anchor", "middle");
+            // add the page title
+            node.append("text")
+                    .attr("dy", ".35em")
+                    .text(function(d) { return Math.round(d.rank); })
+                    .style("text-anchor", "middle");
 
-    node
-            .append("a")
-            .attr("xlink:href", function (d) { return "http://wikipedia.org/wiki/" + d.name; })
-            .append("circle")
-            .attr("class", "clickable")
-            .attr("r", 25)
-            .style("fill", "lightsteelblue")
-            .style("fill-opacity", .3)        // set to 1e-6 to hide
-    ;
+            //add links to node circles
+            node.append("a")
+                    .attr("xlink:href", function (d) { return "http://wikipedia.org/wiki/" + d.name; })
+                    .append("circle")
+                    .attr("class", "clickable")
+                    .attr("r", 25)
+                    .style("fill", "lightsteelblue")
+                    .style("fill-opacity", .3);
 
-    // add the curvy lines
-    function tick() {
-        path.attr("d", function(d) {
-            var dx = d.target.x - d.source.x,
-                    dy = d.target.y - d.source.y,
-                    dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" +
-                    d.source.x + "," +
-                    d.source.y + "A" +
-                    dr + "," + dr + " 0 0,1 " +
-                    d.target.x + "," +
-                    d.target.y;
+            // add the curvy lines
+            function tick() {
+                path.attr("d", function(d) {
+                    var dx = d.target.x - d.source.x,
+                            dy = d.target.y - d.source.y,
+                            dr = Math.sqrt(dx * dx + dy * dy);
+                    return "M" +
+                            d.source.x + "," +
+                            d.source.y + "A" +
+                            dr + "," + dr + " 0 0,1 " +
+                            d.target.x + "," +
+                            d.target.y;
+                });
+                node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            }
+
         });
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-    }
-
-});
-    }, 500);
+    }, 100);
 </script>
 </body>
 </html>
