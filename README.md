@@ -6,12 +6,12 @@ The app:
 Slideshare presentation: slideshare.com/dfjdkfjdkf
 
 ## Table of contents
-- [Introduction](#Introduction)
-- [Data](#Data)
-- [Ingestion](#Ingestion)
-- [Batch job](#Batch-job)
+- [Introduction](#introduction)
+- [Data](#data)
+- [Ingestion](#ingestion)
+- [Batch job](#batch-job)
 - [Pipeline](#pipeline)
-- [Future extensions](#Future-extensions)
+- [Future extensions](#future-extensions)
 
 ## Introduction
 Wikipedia is a very popular source of knowledge and therefore interesting to take a closer look at.
