@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require("fs");
 var matchPage = require("./lib/matchPage.js");
 var getPath = require("./lib/getPath.js");
+var getWeightedPath = require("./lib/getWeightedPath.js");
 
 var app = express();
 
@@ -20,7 +21,7 @@ app.get('/find/:firstFourOrMore',function(req,res) {
 });
 
 app.get('/pathInfo/:sourceVertex/:destinationVertex', function(req, res) {
-    getPath(req.params["sourceVertex"], req.params["destinationVertex"], function(error, data) {
+    getWeightedPath(req.params["sourceVertex"], req.params["destinationVertex"], function(error, data) {
         if (error) {
             return res.status(500).send(error);
         }
