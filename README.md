@@ -46,7 +46,7 @@ Setting a low tolerance can significantly increase the time for the job to run.
 The other form, which is used in the batch job, is a static version where the number of iterations is predefined. 
 
 ## Pipeline
-![pipelin](https://raw.githubusercontent.com/sjher/wikigraph/master/image/pipeline.png)
+![pipeline](https://raw.githubusercontent.com/sjher/wikigraph/master/images/pipeline.png)
 
 ## Future extensions
 - Extend the PageRank calculations with page view data to a intentional surfer model (see [wikipedia](https://en.wikipedia.org/wiki/PageRank)).
