@@ -3,7 +3,7 @@ var _ = require("lodash");
 
 function getPath(from, to, callback) {
 
-    var query = 'MATCH (source:PAGE { title:"'+from+'" }),(destination:PAGE { title:"'+to+'" }),' +
+    var query = 'MATCH (source:Page { title:"'+from+'" }),(destination:Page { title:"'+to+'" }),' +
                 'p = shortestPath((source)-[*]->(destination)) RETURN p';
 
     cypherQuery(query, function(error, body) {
