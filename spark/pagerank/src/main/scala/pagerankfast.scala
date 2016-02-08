@@ -32,7 +32,7 @@ object wikiPageRank {
 		val graph = Graph.fromEdgeTuples(links,1)
 
 		//Run PageRank
-		val ranks = graph.staticPageRank(30)
+		val ranks = graph.staticPageRank(30).persist(org.apache.spark.storage.StorageLevel.MEMORY_AND_DISK)
 
 		val ranksByVertex = pages.join(ranks.vertices)
 		val ranksForPrint = ranksByVertex.map {
