@@ -15,9 +15,7 @@ object wikiPageRank {
 		val linkLines = sc.union(linkFiles)
 
 		val links = linkLines.map {
-			line => line.split(",")
-		}.filter {
-			case line => (line.length == 2)
+			line => line.split(" ")
 		}.map {
 			line => (line(0).toLong, line(1).toLong)
 		}
@@ -26,9 +24,7 @@ object wikiPageRank {
 		val pageLines = sc.union(pageFiles)
 
 		val pages = pageLines.map{
-			line => line.split(",")
-		}.filter {
-			case line => (line.length == 2)
+			line => line.split(" ")
 		}.map {
 			line => (line(0).toLong, line(1))
 		}
