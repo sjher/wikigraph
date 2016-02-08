@@ -1,9 +1,7 @@
 # WikiGraph
 WikiGraph is the big data project I did as part of my Insight Data Science (NY) Data Engineering fellowship from January-March 2016. The project is ment to showcase my learning experience of implementing a big data ETL pipeline. I choose to work with data from the Wikimedia Foundation, publicly available at a number of locations ([here](https://dumps.wikimedia.org/) and [here](http://dumps.wikimedia.org/other/pagecounts-raw/)).
-
-The app: 
     
-Slideshare presentation: slideshare.com/dfjdkfjdkf
+[slides](http://www.slideshare.net/SvenJohansenHermann/sven-hermann)
 
 ## Table of contents
 - [Introduction](#introduction)
