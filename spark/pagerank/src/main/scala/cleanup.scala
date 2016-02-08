@@ -76,12 +76,12 @@ object cleanWikiData {
 		}
 
 		val edgesForPrint = edges.map {
-			case (fromId, toId) => Array(fromId, toId).mkString(",")
+			case (fromId, toId) => Array(fromId, toId).mkString(" ")
 		}
 		edgesForPrint.saveAsTextFile("/wikipedia/en/cleanedLinks")
 
 		val ranksForPrint = pages.map {
-			case (id, title) => Array(id, title).mkString(",")
+			case (id, title) => Array(id, title).mkString(" ")
 		}
 		ranksForPrint.saveAsTextFile("/wikipedia/en/cleanedPages")
 	}
