@@ -75,6 +75,11 @@ var spinner = new Spinner(opts).spin(document.getElementById("chart"));
 d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
 
     spinner.stop();
+
+    if (error) {
+        return alert("Error. Could not find path. Try another.");
+    }
+
     var nodes = {};
 
     // Compute the distinct nodes from the links.
