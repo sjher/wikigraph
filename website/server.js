@@ -39,4 +39,8 @@ app.get("/images/:fileName", function(req,res){
     res.end(image, 'binary');
 });
 
+app.get("/slides", function(req,res){
+   res.sendFile(path.join(__dirname, "/slides.html"));
+});
+
 app.listen(3000);
