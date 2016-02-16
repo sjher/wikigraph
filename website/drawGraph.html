@@ -26,6 +26,7 @@
 <body>
 <section id='chart'></section>
 <script>
+    //spinner attributes
     var opts = {
         lines: 13 // The number of lines to draw
         , length: 40 // The length of each line
@@ -50,6 +51,9 @@
     };
 
     var getUrlParameter = function getUrlParameter(sParam) {
+    //D3 field size
+    var width = 1000, height = 600;
+
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
                 sURLVariables = sPageURL.split('&'),
                 sParameterName,
@@ -90,8 +94,6 @@
                         (nodes[link.target] = {name: link.target, rank: link.rank2});
                 link.value = +link.value;
             });
-
-            var width = 1000, height = 600;
 
             var force = d3.layout.force()
                     .nodes(d3.values(nodes))
