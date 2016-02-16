@@ -11,51 +11,11 @@ object cleanWikiData {
 			.setAppName("cleanWikiData")
 		val sc = new SparkContext(sparkConf)
 
-		def toLong(s: String): Long = {
-			try {
-				s.toLong
-			} catch {
-				case e: Exception => -1
-			}
-		}
-
-		def toInt(s: String): Int = {
-			try {
-				s.toInt
-			} catch {
-				case e: Exception => -1
-			}
-		}
-
 		val linksFile = sc.textFile("/wikipedia/pagelinks.txt")
-
-		val links = linksFile.map {
-			line => line.split(" ")
-		}.filter {
-			case line => (line.length == 4)
-		}.map {
-			case line => (toLong(line(0)),toInt(line(1)),line(2),toInt(line(3)))
-		}.filter {
-			case (id,ns1,_,ns2) => ((id != -1) && (ns1 != -1) && (ns2 != -1))
-		}.filter {
-			case (_, ns1, _, ns2) => (ns1 == 0 && ns2 == 0)
-		}
+		val links = getLinksFromFile(linksFile)
 
 		val pagesFile = sc.textFile("/wikipedia/en-pages.txt")
-
-		val pages = pagesFile.map {
-			line => line.split(" ")
-		}.filter {
-			case line => (line.length == 3)
-		}.map {
-			case line => (toLong(line(0)),toInt(line(1)),line(2))
-		}.filter {
-			case (id,ns,title) => ((id != -1) && (ns != -1))
-		}.filter {
-			case (_, ns, _) => ns == 0
-		}.map {
-			case (id, _, title) => (id, title)
-		}.persist(org.apache.spark.storage.StorageLevel.MEMORY_AND_DISK)
+		val pages = getPagesFromFile(pagesFile).persist(org.apache.spark.storage.StorageLevel.MEMORY_AND_DISK)
 
 		val pagesReverse = pages.map {
 			case (id, title) => (title, id)
@@ -84,5 +44,60 @@ object cleanWikiData {
 			case (id, title) => Array(id, title).mkString(" ")
 		}
 		ranksForPrint.saveAsTextFile("/wikipedia/en/cleanedPages")
+	}
+
+	def toLong(s: String): Long = {
+		try {
+			s.toLong
+		} catch {
+			case e: Exception => -1
+		}
+	}
+
+	def toInt(s: String): Int = {
+		try {
+			s.toInt
+		} catch {
+			case e: Exception => -1
+		}
+	}
+
+	def getLinksFromFile(linksFile: RDD[String]): RDD[(Long, Int, String, Int)] = {
+		//remove invalid entries
+		val sanitizedLinks = linksFile.map {
+			line => line.split(" ")
+		}.filter {
+			case line => (line.length == 4)
+		}.map {
+			case line => (toLong(line(0)),toInt(line(1)),line(2),toInt(line(3)))
+		}.filter {
+			case (id,ns1,_,ns2) => ((id != -1) && (ns1 != -1) && (ns2 != -1))
+		}
+
+		//only keep name-space 0
+		//https://en.wikipedia.org/wiki/Wikipedia:What_is_an_article%3F
+		sanitizedLinks.filter {
+			case (_, ns1, _, ns2) => (ns1 == 0 && ns2 == 0)
+		}
+	}
+
+	def getPagesFromFile(pagesFile: RDD[String]): RDD[(Long, String)] = {
+		val sanitizedPages = pagesFile.map {
+			line => line.split(" ")
+		}.filter {
+			case line => (line.length == 3)
+		}.map {
+			case line => (toLong(line(0)),toInt(line(1)),line(2))
+		}.filter {
+			case (id,ns,title) => ((id != -1) && (ns != -1))
+		}
+
+		//only keep name-space 0
+		//https://en.wikipedia.org/wiki/Wikipedia:What_is_an_article%3F
+		sanitizedPages.filter {
+			case (_, ns, _) => ns == 0
+		}.map {
+			case (id, _, title) => (id, title)
+		}
 	}
 }
