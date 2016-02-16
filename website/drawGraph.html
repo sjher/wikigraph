@@ -53,6 +53,24 @@
     //D3 field size
     var width = 1000, height = 600;
 
+    var from = getUrlParameter('from');
+    var to = getUrlParameter('to');
+
+    var spinner = new Spinner(opts).spin(document.getElementById("chart"));
+
+    setTimeout(function() {
+        d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
+
+            spinner.stop();
+
+            if (error) {
+                return alert("Error. Could not find path. Try another.");
+            }
+
+            drawPath(links);
+        });
+    }, 100);
+
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
                 sURLVariables = sPageURL.split('&'),
@@ -68,23 +86,7 @@
         }
     }
 
-    var from = getUrlParameter('from');
-    var to = getUrlParameter('to');
-
-    var spinner = new Spinner(opts).spin(document.getElementById("chart"));
-
-    setTimeout(function() {
-        drawPath()
-    }, 100);
-
-    function drawPath() {
-        d3.csv("/pathInfo/"+from + "/" + to, function(error, links) {
-
-            spinner.stop();
-
-            if (error) {
-                return alert("Error. Could not find path. Try another.");
-            }
+    function drawPath(links) {
 
             var nodes = {};
 
@@ -179,7 +181,6 @@
                 });
                 node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
             }
-        });
     }
 </script>
 </body>
